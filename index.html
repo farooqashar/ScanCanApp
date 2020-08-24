@@ -8,11 +8,19 @@
 ![Final Working System Demo - ESP32](https://www.youtube.com/watch?v=tjBdE3a6q5g)
 ![Final Working System Demo - Website](https://www.youtube.com/watch?v=-WjyS4P5pdI)
 
+     <p>&nbsp;</p>
+     <p>&nbsp;</p>
+
 # General Project Overview
 
 ## Synopsis
 
 This project aims to utilize the power of augmented reality in order to build an application desgined to scan various soda cans and augment their nutritional information. The end product is an application designed in Vuforia using the Unity Engine. This application can be deployed to a device for a demonstration showing an augmented reality approach of identifying a can correctly out of 4 possible options in addition to displaying various information about the identified can, such as the price, calories, and sugar content. 
+
+## Overview
+
+The project overall consisted of several sprints designed to collect data, implement the framework of the Vuforia/Unity program, integrate the different elements, and deploy the project. The project definition was to develop an end product of an application designed in Vuforia using the Unity Engine. This application would be deployed to a device showing an augmented reality approach of identifying a can correctly out of 4 possible options in addition to displaying various information about the identified can, such as the calories and sugar content. The goals of the project were largely met as the team chose Vuforia/Unity framework, gathered targets, implemented the recognition process, and augmented various information about the 4 cans in a team-oriented work structure and breakdown.
+
 
 ## Goals and Objectives
 
@@ -51,59 +59,47 @@ Vuforia offers a free option with its corporate watermark for its augmented real
 
 # Basic Functionality
 
-The website can be accessed at <a href="https://mgningueasc4.github.io/608FinalWeb/">here</a>. The web site acts as a streamlined interface to access all of the features of Snespchat. Certain features, such as displaying the tags, seeing the user who created a post, as well as following the current user cannot be displayed on the ESP. The website directly interfaces with the server to access these features. A user is allowed to create a user or login upon entering the website. Both functions send the corresponding POST request to the server to validate the user’s credentials, as explained in “User Signup and Login.” The user is then able to view all of their posts, including the tags, as well as the creator of the post by sending a GET request to view the home profile’s feed. This sends one post at a time and thus must be repeated through the total number of posts in order to receive all of the posts. A user can also access their feed, which are all of the posts from other users whom the main user follows. This feature comes with the added functionality of being able to like/unlike posts as well as follow/unfollow the user by clicking on the username associated with the post. These buttons are responsible for sending POST requests that follow and like users. A user is also able to Create a post directly from the website. The user uploads an image as well as tag. If the user allows location services, the user's current location will automatically be used for the post. Once the user clicks "create post," the image is converted into base64 and then the information is sent as a POST request. A user can then view their most recent post on their home user posts page. Posts created from the ESP can also be viewed on the home user post page.
+The application is built using the Vuforia framework and the Unity engine. Targets of various soda can labels were utilized in a database in order for the system to recognize the different cans. The dimensions of these labels were scaled for best output and proper formatting. After recogntion, the nutritional information was augmented via a 2D text feature in order to associate certain sode cans with cartain information. 
 
 # Documentation
 
 ## Assumptions
 
-* The user wants to have a login with the username and password.
-* The user does not forget their username and password.
-* The user only takes photographs.
+* The user only wants nutritional information for 4 soda cans: Pepsi, Coca-Cola, Dr.Pepper, and 7UP.
+* The user is indifferent to drastic change of nutritional information.
+* The user identifies one can at a time.
 
 ## Design Choices
-The project idea was narrowed down according to ideas, such as creativity, dynamic capabilities,workload, and the interesting factor, as shown in <a href="https://docs.google.com/spreadsheets/d/1Y9bIBptiCWfO4W7U3rdYBnQm-e-kpr-vEfvIVXaIHbE/edit#gid=0">this</a> spreadsheet:
 
-The design choice of having a dual system of ESP32 and a dynamic webpage was made in order to make it more feasible and efficient for the user to interact with other people while not having to do everything on a small LCD screen. In addition, the quality of the user experience, such as liking photos, searching faster, and other features of the project, can be improved with the addition of a webpage. However, the entire experience on the webpage would also not be interesting and engaging to the user as this is already too common. Therefore, having features like logging in, taking a picture, and viewing photos on the ESP32/LCD was a clear design choice in order to make the end user experience unique.
+The design choice of using Unity was made due to the many integrations that Unity provides in addition to the colloboration feature of the engine.
 
-The design choice of using a tilting mechanism for user login was made in order to quickly and efficiently allow a user to view the content that they need or to interact with the system. Speech and other methods were objectively slower in this regard.
+The design choice of using Vuforia and not using Google AR, Wikitude SDK, and ARKit was made due to the efficient performance and usage of the cylinderical recogntion feature of the software development kit. In addition, handling of data was effective, secure, and easily scalable. 
 
-The design choice of POSTing a camera picture representation was made in order to avoid the usage of SD cards and SD card readers, which would effectively take longer and be inefficient. Instead, the picture can be encoded to base64 representation, posted to the server, and then reversed back to a viewable format.
-
-The design choice of using several buttons was made in order to not only make it less burden on the user, but also to allow for more user autonomy as more options are seemingly possible with more buttons for different functionalities.
+The design choice of using 2D Text feature instead of a true 3D text feature was due to the inefficiency posed to the user when trying to decipher 3D text on a 2D screen, making it hard for users to understand the nutritional information among other screen camera content. 
 
 ## Challenges
 
-There were many general challenges that the team encountered over the duration of the project.
+There were many challenges relating to the usage of soda can labels from the open source Internet platforms. To this effect, it was challenging to find the appropriate design, dimensions, and display of soda can labels. Therefore, the team created its own compatible versions of the input data of soda can labels. The cylindrical nature of cans in addition to the 2 dimensional nature of a computer screen with edited soda can labels was a challenging aspect of the cans and the proposed future path. Nevertheless, many trials and tests provided a clear optimal pathway to fix the issue of incompatibility of the soda cans. In addition to the soda cans, there were many challenges with the deployment of the application to a mobile Apple device, particularly due to the restrictive nature of Apple Xcode Program and the deployment process. After many trials, errors, and warnings, the usage of a mobile phone camera for the augmented reality application was realized. 
 
-**Connectivity:** There were issues with connecting the ESP32 to the home network due to various privacy settings. This also resulted in issues with connecting to APIs, such as the  Google Speech API. In addition, there were general issues with the previous code from 6.08 labs not working as intended.
+## Successes: 
 
-**Memory:** Using the Google Speech API costed significant memory usage very early on in the project. Therefore, we decided to utilize the TiltType mechanism for the tags as well. With the addition of the camera, there was also more memory issues, especially with posting larger images to the server. There were issues with declaring large variables, large request buffers, and not enough space on the database on the server.
+The successes of the project included the successful data collection of the soda can labels in order for the system to identify the 4 unique soda cans. In addition, the framework recognized each can with significant accuracy after many trials. The information was also displayed in a simple and systematic manner. The program was also further improvised with the better quality of a mobile device rather than a laptop camera interface. 
 
-**Hardware:** The delayed arrival/access to hardware, especially the camera, phototransistor, and the white light diodes, made it difficult to implement the design of the project since initial setup and tests had to be delayed. This resulted in rushed design choices with the camera, picture capture, and picture POSTing.
-
-Some design challenges included:
-
-**Webpage Connectivity:** The webpage’s dynamic features, such as user login, viewing profile, liking photos, and querying photos, all required the webpage to work well with the server. There were some issues that prevented a smooth connection, such as the timing issue when uploading a picture from the website. When a user uploaded an image, the user wouldn’t be able to see images. Therefore it was imperative to ensure the web page used the time according to the last page refresh (the most current time) in order to view the most recent photos. There were also some individual issues with the webpage behaving differently with different browser options, such as https vs http.
-
-**Camera and Camera Picture POSTing:** The integration of camera into the system late caused issues, such as working with the Arducam Libraries and SPI Interface Errors. Initially, the camera worked with a simple HTML template for taking a picture. However, working to integrate picture capture and posting was difficult as the Arducam library included other embedded features, which had to be parsed and narrowed down to our use case. Once the picture capture functionality was done, the POSTing of the image was difficult given the memory and space constraints on the ESP32 and the server. Through several test runs of POSTing picture representations, the best course of action for larger camera files was to send them in chunks and only send the base64 representation of any image.
-
-
-# Software 
 
 # Frequent Asked Questions
 
-**What happens if a user is new to the network and does not have a password and username?**
+**WWhy is the augmented information not appearing some times?**
 
-The user can sign up for Snespchat from the initial welcome screen and create their username and password.
+There can be many external reasons why the application is not working optimally in some edge cases. One reasons is the lack of appropiate lighting in the room as this can cause the system to not recognize some distinguisable features of the soda can target. Another reason is the distance and potential orientation of the device and the camera as these factors can affect the quality of cylinderical target recognition. 
 
-**Does the user have to login on the webpage?**
+**What is the source of the nutritional information?**
 
-Yes, the website is also protected and the user would need to enter their username and password, which obviously stays the same whether the use logs in via the ESP32 or the webpage.
+The sources for the nutrional information for the soda cans are from the respective corporate websites as these provide released accurate data.
 
-**What can the user do on the ESP32?**
+**Where can I look at the project code?**
 
-The user can take a picture with the camera, view their profile, and query by tags.
+The Github repository located here can offer various pieces of the Xcode software infrastructure. 
+
 
 **What if the user does not want to show their location when submitting a post?**
 
