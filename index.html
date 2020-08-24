@@ -1,0 +1,305 @@
+<meta charset="utf-8" emacsmode="-*- markdown -*-"> <link rel="stylesheet" href="https://casual-effects.com/markdeep/latest/journal.css?">
+
+                          **6.08 Team 6 Final Report**
+
+                          <p>&nbsp;</p>
+                          <p>&nbsp;</p>
+
+![Final Working System Demo - ESP32](https://youtu.be/drH-JVKKI54)
+![Final Working System Demo - Website](https://www.youtube.com/watch?v=-0eK6bKEQF8)
+
+# General Overview
+
+## Synopsis
+
+In a virtual world, everybody is certainly reliant on social media networks and ways to connect virtually. This is often done by many large social media companies, such as Facebook and Snapchat, who utilize various features in order to build a network of users and relations between users. These features fundamentally include photos or text being available in a profile of a user that the user’s friends can see. While these social networks are valuable, their often large scale network does not meet the needs of many users who prefer a more customizable and different user experience that is not correlated to a large company or entity. According to many psychological analyses, excessive reliance on a single entity, such as a standard social media network, can ultimately cause a meltdown and lack of any substantial positive marginal benefit, such as satisfaction gained from using that social media network. In addition, large social media networks often do not lead to new connections that are on your street or local community as the interconnected network is too large. This is where Snespchat comes in.
+
+## Project Mission Statement
+
+Stuck during the quarantine? Bored with your traditional use of social media? Use Snespchat, a social platform built around the combination of Pinterest and Snapchat that will let you know about what is happening in your local street or your state with tags. In addition, you can follow other people within your neighborhood and make more meaningful connections in your local community.
+
+## Overview
+
+This Snepschet project will allow users to take pictures. This will be done through a camera that can be attached to the ESP32 microcontroller.  Once the images are taken via a button press after the user logs in using their username and password, the user can insert tags to the images via controls connected to the microcontroller or via speech. Once these tags are associated with the said image, they can be posted to the server-based website. The image representation will also be posted online, dealt with, and then shown on the website. In addition, through more ESP32 button interface, the captured photo from the camera will also be shown on the LCD screen.
+
+Once the images are on the web page, we can search the pictures by tags that were assigned to the individual pictures via query search from the database of the pictures. This will provide the user with a feed of all such pictures. The user can also search posts by usernames or tags through the ESP32 microcontroller. In addition, the user can also simply view the posts of different users in their homepage. To follow other people and view their posts, there would be a database of the usernames which can be queried. The user also has the option of liking other people’s posts, which can be done on the web page itself.
+
+# Functionality
+
+## User Signup and Login
+
+All usernames and passwords are stored in a table in a SQL database in the server. When the ESP32 is turned on, the user is prompted to either log in or sign up, which leads to a screen where the user inputs a username and a password by typing by tilting the screen.
+
+The username and password are sent to the server for verification. If the user is creating a user, the server checks if the username is unique (i.e. does not already exist in the table), and creates the user if it is (else it just prints a failure message).
+
+If the user is logging in, the server checks if the username exists and the password for that username is correct. If both of these conditions are satisfied, the user is directed to a welcome screen (else they are sent back to the login/signup screen).
+
+## Viewing User Posts on ESP32
+
+The user is able to view the pictures that they have taken with the camera after they have POSTed it to the server. This photo is in the user’s profile along with the other pictures that they have taken/uploaded to the webpage. The user’s profile is available on the webpage with the ability to like photos and query them. On the ESP32, the user is able to see the photos on their profile by “scrolling” through them using a button functionality. In other words, one button can change the photo to the next photo and the other button can change the photo to the previous one, assuming there are photos at those photo “indices.”
+
+## Taking a Photo and POSTing It To Web Page
+
+With ESP32 button functionality, the user is able to initiate a photo capture with the camera. This photo is then encoded to base64 representation. After this, the photo is POSTed to the webpage and then converted back into a viewable form. This photo is displayed in the user profile on the webpage. The Arducam library helps with the picture capture.
+
+## Accessing Posts on ESP32
+
+Posts are kept in the server with post ID, file ID (that maps to the photo in the server), sender, tags, time. There are three ways of accessing posts on the ESP32. After logging in, the user may choose to do (by choosing from a menu with button clicks):
+
+**Viewing the user’s feed:** The user’s feed is the posts by the people the user follows (following mechanism is implemented on the server and done via POST requests). Upon choosing this option, a request is sent to the server to query the posts with the senders that the user follows.
+
+**Viewing the user’s profile:** The user’s profile is the posts sent by the user. Upon choosing this option, a request is sent to the server to query the posts from the user.
+
+**Searching posts by username and/or tags:** Upon choosing this option, the user is prompted to input a username and tag, and a request is sent to the server to query the posts from the given username with the given tag. The user may choose to provide a username, a password, both or neither.
+
+## Adding a Tag
+The tag can be added to the picture through tilt typing. Tilt typing works the same way as it does on the login screen and here can be used to attach a tag to the photo to be posted with the photo.
+
+## Flash Functionality
+
+The flash functionality serves to be an automatic flashlight for the camera. A Phototransistor detects the environment.  If the light conditions are dark (ie above a certain threshold) the phototransistor triggers an LED light to flash up when the picture is being taken. This functionality happens concurrently with the functionality of initiating a camera capture since if the conditions are dark and we want to take a picture, then the LED light will turn on in order to provide light.
+
+## Web Page Features
+
+
+
+The website can be accessed at <a href="https://mgningueasc4.github.io/608FinalWeb/">here</a>. The web site acts as a streamlined interface to access all of the features of Snespchat. Certain features, such as displaying the tags, seeing the user who created a post, as well as following the current user cannot be displayed on the ESP. The website directly interfaces with the server to access these features. A user is allowed to create a user or login upon entering the website. Both functions send the corresponding POST request to the server to validate the user’s credentials, as explained in “User Signup and Login.” The user is then able to view all of their posts, including the tags, as well as the creator of the post by sending a GET request to view the home profile’s feed. This sends one post at a time and thus must be repeated through the total number of posts in order to receive all of the posts. A user can also access their feed, which are all of the posts from other users whom the main user follows. This feature comes with the added functionality of being able to like/unlike posts as well as follow/unfollow the user by clicking on the username associated with the post. These buttons are responsible for sending POST requests that follow and like users. A user is also able to Create a post directly from the website. The user uploads an image as well as tag. If the user allows location services, the user's current location will automatically be used for the post. Once the user clicks "create post," the image is converted into base64 and then the information is sent as a POST request. A user can then view their most recent post on their home user posts page. Posts created from the ESP can also be viewed on the home user post page.
+
+# Documentation
+
+## Functional Block Diagram of the System
+
+<p align="center">
+<img src="BlockDiagram.png" alt="Team 6" width="600" height="600">
+</p>
+
+
+## State Machine Diagram
+
+<p align="center">
+<img src="ESPStateDiagram.png" alt="Team 6" width="600" height="600">
+</p>
+
+## Assumptions
+
+* The user wants to have a login with the username and password.
+* The user does not forget their username and password.
+* The user only takes photographs.
+
+## Design Choices
+The project idea was narrowed down according to ideas, such as creativity, dynamic capabilities,workload, and the interesting factor, as shown in <a href="https://docs.google.com/spreadsheets/d/1Y9bIBptiCWfO4W7U3rdYBnQm-e-kpr-vEfvIVXaIHbE/edit#gid=0">this</a> spreadsheet:
+
+The design choice of having a dual system of ESP32 and a dynamic webpage was made in order to make it more feasible and efficient for the user to interact with other people while not having to do everything on a small LCD screen. In addition, the quality of the user experience, such as liking photos, searching faster, and other features of the project, can be improved with the addition of a webpage. However, the entire experience on the webpage would also not be interesting and engaging to the user as this is already too common. Therefore, having features like logging in, taking a picture, and viewing photos on the ESP32/LCD was a clear design choice in order to make the end user experience unique.
+
+The design choice of using a tilting mechanism for user login was made in order to quickly and efficiently allow a user to view the content that they need or to interact with the system. Speech and other methods were objectively slower in this regard.
+
+The design choice of POSTing a camera picture representation was made in order to avoid the usage of SD cards and SD card readers, which would effectively take longer and be inefficient. Instead, the picture can be encoded to base64 representation, posted to the server, and then reversed back to a viewable format.
+
+The design choice of using several buttons was made in order to not only make it less burden on the user, but also to allow for more user autonomy as more options are seemingly possible with more buttons for different functionalities.
+
+## Challenges
+
+There were many general challenges that the team encountered over the duration of the project.
+
+**Connectivity:** There were issues with connecting the ESP32 to the home network due to various privacy settings. This also resulted in issues with connecting to APIs, such as the  Google Speech API. In addition, there were general issues with the previous code from 6.08 labs not working as intended.
+
+**Memory:** Using the Google Speech API costed significant memory usage very early on in the project. Therefore, we decided to utilize the TiltType mechanism for the tags as well. With the addition of the camera, there was also more memory issues, especially with posting larger images to the server. There were issues with declaring large variables, large request buffers, and not enough space on the database on the server.
+
+**Hardware:** The delayed arrival/access to hardware, especially the camera, phototransistor, and the white light diodes, made it difficult to implement the design of the project since initial setup and tests had to be delayed. This resulted in rushed design choices with the camera, picture capture, and picture POSTing.
+
+Some design challenges included:
+
+**Webpage Connectivity:** The webpage’s dynamic features, such as user login, viewing profile, liking photos, and querying photos, all required the webpage to work well with the server. There were some issues that prevented a smooth connection, such as the timing issue when uploading a picture from the website. When a user uploaded an image, the user wouldn’t be able to see images. Therefore it was imperative to ensure the web page used the time according to the last page refresh (the most current time) in order to view the most recent photos. There were also some individual issues with the webpage behaving differently with different browser options, such as https vs http.
+
+**Camera and Camera Picture POSTing:** The integration of camera into the system late caused issues, such as working with the Arducam Libraries and SPI Interface Errors. Initially, the camera worked with a simple HTML template for taking a picture. However, working to integrate picture capture and posting was difficult as the Arducam library included other embedded features, which had to be parsed and narrowed down to our use case. Once the picture capture functionality was done, the POSTing of the image was difficult given the memory and space constraints on the ESP32 and the server. Through several test runs of POSTing picture representations, the best course of action for larger camera files was to send them in chunks and only send the base64 representation of any image.
+
+## Parts List
+
+From 6.08 Curriculum/Laboratory:
+
+* TFT LCD Screen
+* ESP32 Dev Kit
+* Breadboard
+* Buttons
+* Microphone Sensor
+* GPS Sensor
+* IMU Sensor
+* Transistor
+* LED Lights
+* Resistors
+* White Light Diode
+
+Purchased:
+* <a href="https://www.amazon.com/Arducam-Module-Megapixels-Arduino-Mega2560/dp/B012UXNDOY">Arducam Mini Module Camera Shield with OV2640 2 Megapixels Lens</a>
+# Software Layout
+
+## Database
+
+There are multiple tables that are implemented in our project.
+
+**all_users:** This table has the user information, such as the username and the password. Table specifics are below.
+
+**post_table:** This table has information that would be useful to query on, such as tags and likes.Table specifics are below.
+
+**likes_table:**  This table has the userID and postID data attributes.Table specifics are below.
+
+**followers_table:** This table has the followersID and the FolloweeID data attributes.Table specifics are below.
+
+
+
+## HTML File Descriptions[Webpage]
+
+**login.js:** This file deals with the user logging in. It takes the inputted username and password and sends a GET request that returns whether the user credentials entered were valid or not. If they are, the file redirects the user to the user’s home post page.
+
+**createUser.js:** This file allows a new user to create their own profile. Once the user clicks “Create User” on the html page, this file will send a post request to create_user.py which creates the user.
+
+**homePosts.js:** This file is responsible for retrieving all of the user’s follower’s posts and posting them on the page using jQuery. The file must retrieve the total number of posts by running a preliminary get request to post.py. The file then runs a for loop, retrieving all of the feed posts. This page also runs the username and tag query features. Once the user clicks “Search Tag” or “Search User,” a GET request is sent to post.py to retrieve the queried posts.
+
+**myprofile.js:** Similar to homePosts, except that the user views their own posts. It is also responsible for getting the total number of followers and followees (accounts the user follows) and displays it in the user’s home page.
+
+**createpost.js:** This file deals with all the parameters regarding creating posts. It converts uploaded images to base64, it gets the user's current latitude and longitude (if the user allows it). It also gets the tag information a user submits. It submits all of this information including the username of the person logged in, and submits a post request to post.py.
+
+**index.html:** This is the first page a user sees when entering the website. The user enters the username and password and then clicks “Log In.” If the credentials are valid, the user is then redirected to the user’s home posts page where they can view the posts they have made. The user can now access the rest of the website. The only other page available to a user that is not logged in is the “CreateUser” page.
+
+**createUser.html:** This page deals with creating a user. Once a user submits their username and password, createUser.js ensures the username isn’t taken. If the username is not taken, the user is alerted that the creation of their account is successful. The user is then redirected to the login page where the user can login with their new login info.
+
+**posts.html:** This page deals with retrieving all of the posts. It also allows a user to search by Tag, Username, or both.
+
+**myProfile.html:** This page is similar to posts.html, except the user can view the user’s own posts. They can also view the number of followers and followees the user has.
+
+**createPost.html:** This page is responsible for creating a post. A user can click “Upload an image” where they will be redirected to the user’s File Explorer/Finder in order to choose an image to upload. The user can also input the tags they would like associated with the image. When prompted, the user can choose to allow location services, which then automatically submits the user’s current latitude and longitude points for entry into the POST request. Once the user has filled in all of the information, the user can click “Create Post” which creates the post. The user will be alerted if all information is entered correctly.  They will then be redirected to their home posts page, where they can view the recently created post as well as their others.
+
+**styles.css:** This is a css page that deals with styling, including colors, fonts, sizing, etc.
+
+
+
+## Python File Descriptions[Server Side]
+
+**create_database.py:** This file deals with creating a database. For example, some tables include all_users, post_table, likes_table, followers_table. The specifics of these databases are described in the earlier database section.
+
+**create_user.py:** This file creates the user when the user signs up for an account. This also checks whether a given username is in the database.
+
+**follow.py:** This file deals with the following and unfollowing of users, getting the followers, and getting the following.
+
+**get_all_users.py:** This file deals with getting the username of a particular person or getting all the usernames if necessary.
+
+**like.py:** This file deals with liking or not liking a picture as well as getting the number of likes.
+
+**post.py:** This file deals with making a post of the usernames, time, etc. that will be used eventually for other features and querying.
+
+## Arduino File Descriptions[ESP32]
+
+**esp.ino:** This file handles all of the ESP32 interface. Some of the important Classes in this Arduino file are described below:
+
+* Button Class: This Button class was adapted from the classy button exercise in 6.08 and handles different button states, such as REST, BOUNCE_START, and PUSH. This allows for more buttons to be initialized and used in the program.
+
+* TiltType Class: This TiltType class is used to enter user input by tilting the system in order to progress or regress various characters with a certain angle threshold.
+
+* LoginScreen Class: This LoginScreen Class sets up the two choices of either logging in using the appropriate username and password or signing up for a new account, thus creating a new username and password for the user using the TiltType design.
+
+* UsernamePasswordScreen Class: This UsernamePasswordScreen Class deals with what happens when the user actually wants to login using their username and password. There is a GET request to see if the user’s credentials actually exist and are accurate.
+
+* SelectScreen Class: This SelectScreen Class deals with what happens after the user has successfully logged in. The user is presented with a list of options or interactions that they can do, such as taking a picture or viewing their profile.
+
+Other classes, such as PictureScreen Class, deal with each specific interaction that the user can make.
+
+# Power Consumption
+
+The major power consumption for our system is due to the major sensors utilized and the ESP32 system itself.
+
+# Frequent Asked Questions
+
+**What happens if a user is new to the network and does not have a password and username?**
+
+The user can sign up for Snespchat from the initial welcome screen and create their username and password.
+
+**Does the user have to login on the webpage?**
+
+Yes, the website is also protected and the user would need to enter their username and password, which obviously stays the same whether the use logs in via the ESP32 or the webpage.
+
+**What can the user do on the ESP32?**
+
+The user can take a picture with the camera, view their profile, and query by tags.
+
+**What if the user does not want to show their location when submitting a post?**
+
+Then the post will default to the server’s location, which is in Garden City, Michigan.
+
+# Team Details
+
+## Team Members
+
+**Nurullah Giray Kuru ‘23**
+
+**Ashar Farooq ‘23**
+
+**Mohammadou R. Gningue ‘23**
+
+**Yousef N. Mardini ‘21**
+
+**Muhammed Sulema S. Thaniana ‘23**
+
+
+## Team Communication and Accountability
+
+We established a Discord server and a Facebook Messenger chat as both systems ensured that we do not miss team communications. In addition, we also created a mailing list (608team6@mit.edu) in order to make it easier to receive information to all of us. In terms of the weekly meeting times, we had worked out a flexible schedule, including 5 PM EDT/6 PM EDT on Wednesdays in addition to late nights(10 PM EDT) over the weekend. We would also meet right after our weekly deliverables check-ins and discuss our goals for next week. We had to take into account the timing constraints of all the team members, especially since some of us were in different time zones and countries. In terms of the accountability measures, we had set up a system where we can regularly message in the Discord chat about the progress of the deliverables starting on Monday and making sure that team members know what they are supposed to be doing.
+
+# Weekly Milestones Clustered By Functionality
+
+**Clarifying Project, Team, and Overall Details:**
+
+<p align="center">
+<img src="ClarifyProject.PNG" alt="Team 6" width="600" height="600">
+</p>
+
+**Database Management:**
+
+<p align="center">
+<img src="Database.PNG" alt="Team 6" class="center" width="600" height="600">
+</p>
+![Creating and Displaying Users](https://www.youtube.com/watch?v=yDgWBvYDQvY&feature=emb_title)
+
+![Initial Posting Pictures To Server/GET request Demo](https://youtu.be/Av0iKjOvpek)
+
+![Like and Relationship Database Demo](https://www.youtube.com/watch?v=I3nFu23ENwA&feature=emb_title)
+
+![Sample Query by Tag](https://www.youtube.com/watch?v=CIzzkZ3_5yI&feature=emb_title)
+
+
+
+**Web Page/Server-Side Development:**
+<p align="center">
+<img src="WebpageServer.PNG" alt="Team 6" class="center" width="600" height="600">
+</p>
+
+![Homepage and Profile Feeds](https://www.youtube.com/watch?v=Lzq5FIS4leA&feature=emb_title)
+
+
+**Tag/Flash/Camera Functionality:**
+<p align="center">
+<img src="Camera.PNG" alt="Team 6"  class="center" width="600" height="600">
+</p>
+
+![Basic Initial Tag Management System](https://www.youtube.com/watch?v=BoNWAwvn8fU&feature=emb_title)
+
+![Basic Initial “Flash” Function](https://www.youtube.com/watch?v=pU8FRAUVMuU&feature=emb_title)
+
+![Camera Picture Capture Example](https://www.youtube.com/watch?v=gYaZSqHKXdo&feature=emb_title)
+
+
+
+**ESP32 Interface:**
+<p align="center">
+<img src="ESP32.PNG" alt="Team 6" width="600" height="600">
+</p>
+
+![User Logging In](https://www.youtube.com/watch?v=XU0fbDTkXJw&feature=emb_title)
+
+![ESP32 Button Cycling Through Interface](https://www.youtube.com/watch?v=K5FK8zz2hfI&feature=emb_title)
+
+![Post Display Demo](https://www.youtube.com/watch?v=pkMhbyz-W_0&feature=emb_title)
+
+
+
+<style class="fallback">body{visibility:hidden}</style><script>markdeepOptions={tocStyle:'medium'};</script>
+<!-- Markdeep: --><script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?" charset="utf-8"></script>
